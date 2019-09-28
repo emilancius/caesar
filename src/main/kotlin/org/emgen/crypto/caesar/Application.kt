@@ -17,13 +17,21 @@ fun main(arguments: Array<String>) {
     }
 
     val parameters = Parameters(arguments)
+    val letters = parameters.value(Parameter.ALPHABET) ?: Settings.DEFAULT_ALPHABET
+    val key = parameters.value(Parameter.KEY)?.toIntOrException() ?: Settings.DEFAULT_KEY
+    val maxKeyLength = letters.length - 1
+
+    if (key < 1 || key > maxKeyLength) {
+        println("argument key (-k) must be in range [1; $maxKeyLength]")
+        return
+    }
 
     try {
         val settings = Settings(
             Action.valueOf(action.toUpperCase()),
             parameters.value(Parameter.MESSAGE) ?: throw Exception("message not provided"),
-            parameters.value(Parameter.KEY)?.toIntOrException() ?: Settings.DEFAULT_KEY,
-            parameters.value(Parameter.ALPHABET) ?: Settings.DEFAULT_ALPHABET)
+            key,
+            letters)
         println(process(settings))
     } catch (e: Exception) {
         println(e.message)
