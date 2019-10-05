@@ -1,6 +1,6 @@
 package org.emgen.crypto.caesar
 
-enum class Action {
+enum class Action(val value:Int = 1) {
     ENCRYPT,
-    DECRYPT
+    DECRYPT(-1)
 }

@@ -21,8 +21,8 @@ fun main(arguments: Array<String>) {
     val key = parameters.value(Parameter.KEY)?.toIntOrException() ?: Settings.DEFAULT_KEY
     val maxKeyLength = letters.length - 1
 
-    if (key < 1 || key > maxKeyLength) {
-        println("argument key (-k) must be in range [1; $maxKeyLength]")
+    if (key < 0 || key > maxKeyLength) {
+        println("argument key (-k) must be in range [0; $maxKeyLength]")
         return
     }
 
@@ -31,7 +31,8 @@ fun main(arguments: Array<String>) {
             Action.valueOf(action.toUpperCase()),
             parameters.value(Parameter.MESSAGE) ?: throw Exception("message not provided"),
             key,
-            letters)
+            letters
+        )
         println(process(settings))
     } catch (e: Exception) {
         println(e.message)
@@ -51,7 +52,6 @@ private fun processLetter(lettersMapping: Map<Char, Int>, letter: Char, settings
 }
 
 private fun calculateIndex(index: Int, settings: Settings): Int {
-    val key = if (Action.ENCRYPT == settings.action) settings.key else -settings.key
-    val count = settings.letters.length
-    return if (key < 0) (index - (key * -1))._mod(count) else (index + key)._mod(count)
+    val key = settings.key * settings.action.value
+    return (index + key)._mod(settings.letters.length)
 }

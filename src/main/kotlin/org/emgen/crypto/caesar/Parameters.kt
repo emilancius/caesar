@@ -2,7 +2,6 @@ package org.emgen.crypto.caesar
 
 class Parameters(val parameters: Array<String> = emptyArray()) {
 
-    // todo - REFACTORING
     fun value(parameter: Parameter): String? {
         var index = 0
 
